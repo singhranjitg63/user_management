@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
 use App\Http\Requests\Users\CreateUserRequest;
+use Illuminate\Support\Facades\DB;
 use App\Models\User;
 
 class UsersController extends Controller
@@ -20,7 +20,7 @@ class UsersController extends Controller
             ->orWhere('email', 'LIKE' , '%'.$request->input('keyword').'%')
             ->orWhere('role', 'LIKE' , '%'.$request->input('keyword').'%');
         }
-        $items = $builder->paginate(5);
+        $items = $builder->orderBy('name', 'asc')->paginate(5);   //simplePaginate()
         return view('users.index', ['items' => $items]);
     }
 
@@ -38,7 +38,7 @@ class UsersController extends Controller
     public function store(CreateUserRequest $request)
     {
         try {
-            // \DB::beginTransaction();
+            DB::beginTransaction();
             $userData = new User();
             $userData->name = $request->name;
             $userData->email = $request->email;
@@ -50,10 +50,10 @@ class UsersController extends Controller
                 throw new \Exception("User has not been created. please try again later", 422);
                 
             }
-            // \DB::commit();
+            DB::commit();
             return redirect()->route('users.index')->with('success','Add new User successfully!' );
         } catch (\Throwable $th) {
-            // \DB::rollback();
+            DB::rollback();
             dd($th);
             return redirect()->back()->with('error', $th->getMessage());
         }
@@ -82,7 +82,7 @@ class UsersController extends Controller
     public function update(Request $request, string $id)
     {
          try {
-            // \DB::beginTransaction();
+            DB::beginTransaction();
             $user = User::find($id);
             $user->name = $request->name;
             $user->email = $request->email;
@@ -92,10 +92,10 @@ class UsersController extends Controller
             if (!$user->save()) {
                 throw new \Exception("User has not been updated. Please try again later", 422);
             }
-            // \DB::commit();
+            DB::commit();
             return redirect()->route('users.index')->with('success','User update successfully!' );
         } catch (\Throwable $th) {
-            // \DB::rollback();
+            DB::rollback();
             return redirect()->back()->with('error', $th->getMessage());
         }
     }

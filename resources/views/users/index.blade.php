@@ -1,11 +1,6 @@
 <x-layout>
     <div class="container">
-        <script>
-function showSuccessNotification() {
-    alert('Form submitted successfully!');
-}
-</script>
-<div class="d-flex justify-content-between">
+        <div class="d-flex justify-content-between">
             <h2>Users Table</h2>
             <button class="btn btn-success m-3"><a class="text-white text-decoration-none" href="{{ route('users.create') }}">Add new User</a></button>
         </div>
@@ -15,12 +10,12 @@ function showSuccessNotification() {
                    </div>
                    @endif -->
         <form class="w-100 me-3 input-group" action="{{route('users.index')}}" method="get">
-            <input type="text" class="form-control" placeholder="Search..."  name="keyword" value="{{ request()->input('keyword') }}">
-           <a href="{{route('users.index')}}" class="input-group-text text-decoration-none">Reset</a>
+            <input type="text" class="form-control" placeholder="Search..." name="keyword" value="{{ request()->input('keyword') }}">
+            <a href="{{route('users.index')}}" class="input-group-text text-decoration-none">Reset</a>
         </form>
         <br>
-        <table class="table table-bordered" border="1">
-            <thead>
+        <table class="table table-bordered table-hover" border="1">
+             <thead class="table-dark">
                 <tr>
                     <th>Id.No</th>
                     <th>Name</th>
@@ -33,7 +28,7 @@ function showSuccessNotification() {
             <tbody>
                 @forelse($items as $item)
                 <tr>
-                    <td>{{$loop->iteration + ((request()->input('page', 1)-1) * 5) }}</td> 
+                    <td>{{$loop->iteration + ((request()->input('page', 1)-1) * 5) }}</td>
                     <td>{{$item->name}}</td>
                     <td>{{$item->email}}</td>
                     <td>{{$item->phone}}</td>
@@ -54,19 +49,21 @@ function showSuccessNotification() {
                 @endforelse
             </tbody>
         </table>
-        <div class="text-center">
+        <div class="text-start">
             {{$items->links()}}
         </div>
     </div>
+    <style>
+        .w-5.h-5 {
+            width: 25px
+        }
+    
+        .flex.gap-2 {
+            display: none;
+        }
+    
+        /* .inline-flex {
+            display:none;
+        } */
+    </style>
 </x-layout>
-<style>
-    .w-5.h-5{
-        width: 25px
-    }
-    .flex.gap-2 {
-        display: none;
-    }
-    /* .inline-flex {
-        display:none;
-    } */
-</style>

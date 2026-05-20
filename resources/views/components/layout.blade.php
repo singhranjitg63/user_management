@@ -15,7 +15,6 @@
     crossorigin="anonymous"></script>
   <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/dashboard/">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.css" />
-  <!-- <link rel="stylesheet" href="Style.css" /> -->
 
   <style>
     .bd-placeholder-img {
@@ -49,7 +48,15 @@
             <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32" class="rounded-circle">
           </a>
           <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser2">
-            <li><a class="dropdown-item" href="#">log out</a></li>
+            <li>
+              <form action="{{ route('logout') }}" method="POST">
+                @csrf
+                @method('POST')
+                <button type="submit" class="dropdown-item">
+                  Log Out
+                </button>
+              </form>
+            </li>
           </ul>
         </div>
       </div>
@@ -61,7 +68,7 @@
         <div class="position-sticky pt-3">
           <ul class="nav flex-column">
             <li class="nav-item">
-              <a class="nav-link text-dark" aria-current="page" href="">
+              <a class="nav-link text-dark" aria-current="page" href="{{ route('dashboard')}}">
                 <span data-feather="home"></span>
                 Home
               </a>
@@ -106,10 +113,10 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
   @if(session('success'))
   <script>
-    toastr.options={
-    "closeButton": true,
-    "progressBar": true,
-    "timeOut":"2000",
+    toastr.options = {
+      "closeButton": true,
+      "progressBar": true,
+      "timeOut": "2000",
     };
     toastr.success("{{session('success')}}");
   </script>

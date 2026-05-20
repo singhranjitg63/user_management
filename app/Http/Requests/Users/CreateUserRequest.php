@@ -4,6 +4,7 @@ namespace App\Http\Requests\Users;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class CreateUserRequest extends FormRequest
 {
@@ -22,12 +23,13 @@ class CreateUserRequest extends FormRequest
      */
     public function rules(): array
     {
-       return [
-            'name'=>'required|min:4|max:60',
-            'email'=>'required|email|unique:users,email',
-            'password'=>'required|string|min:5|max:9',
-            'phone'=>'required|string|max:15',
-            'role'=>'required',
+        $userId = $this->route('id');
+        return [
+            'name' => 'required|min:4|max:60',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|string|min:5',
+            'phone' => 'required|string|max:15',
+            'role' => 'required',
         ];
     }
 }

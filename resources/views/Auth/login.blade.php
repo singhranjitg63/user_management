@@ -19,31 +19,38 @@
         <div class="card shadow-lg border-0 rounded-4">
           <div class="card-body p-5">
             <div class="text-center mb-4">
-              <h2 class="fw-bold text-primary">Login</h2>
+              <h2>Login</h2>
+             
               <p class="text-muted">Sign in to continue</p>
             </div>
 
-            <form action="#" method="POST">
+            <form action="/login" method="POST">
+              @csrf
+              @Method('POST')
               <div class="mb-3">
-                <label for="inputEmail" class="form-label fw-semibold">Email Address</label>
-                <input type="email" class="form-control form-control-lg" name="email" id="inputEmail" placeholder="Enter your email" required>
+                <label for="inputEmail" class="form-label fw-semibold">Email</label>
+                <input type="email" class="form-control " value="{{ old('email')}}" name="email" id="inputEmail" placeholder="Enter your email" >
+                @error('email')
+                <div class="text-danger">{{$message}}</div>
+                @enderror
               </div>
               <div class="mb-2">
                 <label for="inputPassword" class="form-label fw-semibold">Password</label>
-                <input type="password" class="form-control form-control-lg" name="password" id="inputPassword" placeholder="Enter your password" required>
+                <input type="password" class="form-control " name="password" id="inputPassword" placeholder="Enter your password" >
+                @error('password')
+                <div class="text-danger">{{$message}}</div>
+                @enderror
               </div>
 
               <div class="text-end mb-4">
                 <a href="#" class="text-decoration-none">Forgot Password?</a>
               </div>
               <div class="d-grid mb-3">
-                <button type="submit"class="btn btn-primary btn-lg">Log In</button>
+                <button type="submit" class="btn btn-primary ">Log In</button>
               </div>
               <div class="text-center">
                 <p class="mb-0">Don't have an account?
-                  <a href="#" class="text-decoration-none fw-bold">
-                    Register
-                  </a>
+                  <a href="#" class="text-decoration-none fw-bold">Register</a>
                 </p>
               </div>
             </form>

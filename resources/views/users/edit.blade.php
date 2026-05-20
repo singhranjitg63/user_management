@@ -17,18 +17,21 @@
                                 <input type="hidden" name="__METHOD" value="put">
                                 <label for="name" class="form-label">Name</label>
                                 <input type="text" name="name" class="form-control" id="firstName" value="{{$item->name}}">
+                                <span class="text-danger">@error('name'){{$message}}@enderror</span>
                             </div>
 
                             <!-- Email -->
                             <div class="mb-3">
                                 <label for="email" class="form-label">Email</label>
                                 <input type="email" class="form-control" name="email" id="email" value="{{$item->email}}">
+                                <span class="text-danger">@error('email'){{$message}}@enderror</span>
                             </div>
 
                             <!-- phone -->
                             <div class="mb-3">
                                 <label for="phone" class="form-label">phone</label>
                                 <input type="text" class="form-control" name="phone" id="phone" value="{{$item->phone}}">
+                                <span class="text-danger">@error('phone'){{$message}}@enderror</span>
                             </div>
                             <!-- Role -->
                             <div class="mb-3">
