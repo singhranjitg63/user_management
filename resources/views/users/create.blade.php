@@ -14,30 +14,30 @@
                                     <div class="row g-4">
                                         <div class="col-sm-12">
                                             <label for="name" class="form-label">Name</label>
-                                            <input type="text" name="name" class="form-control" id="firstName" value="">
+                                            <input type="text" name="name" class="form-control" id="firstName" value="{{ old('name')}}">
                                             <span class="text-danger">@error('name'){{$message}}@enderror</span>
                                         </div>
                                         <div class="col-sm-12">
                                             <label for="email" class="form-label">Email</label>
-                                            <input type="email" class="form-control" name="email" id="email" value="">
+                                            <input type="email" class="form-control" name="email" id="email" value="{{ old('email')}}">
                                             <span class="text-danger">@error('email'){{$message}}@enderror</span>
                                         </div>
 
                                         <div class="col-12">
                                             <label for="password" class="form-label">Password</label>
-                                            <input type="password" class="form-control" name="password" id="password">
+                                            <input type="password" class="form-control" name="password" id="password"  value="{{ old('password')}}">
                                             <span class="text-danger">@error('password'){{$message}}@enderror</span>
                                         </div>
                                         <div class="col-12">
                                             <label for="phone" class="form-label">Phone</label>
-                                            <input type="text " class="form-control" name="phone" id="phone">
+                                            <input type="text " class="form-control" name="phone" id="phone"  value="{{ old('phone')}}">
                                             <span class="text-danger">@error('phone'){{$message}}@enderror</span>
                                         </div>
 
                                         <div class="col-12">
                                             <label for="role" class="form-label">Role</label>
                                             <select name="role" class="form-control" id="role" >
-                                                <option value="" disabled selected>Select Role</option>
+                                                <option value="{{ old('role')}}" disabled selected>Select Role</option>
                                                 <option  value="Subscriber">Subscriber</option>
                                                 <option  value="Author">Author</option>
                                             </select>

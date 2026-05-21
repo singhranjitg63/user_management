@@ -4,23 +4,29 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\User;
+use Illuminate\Support\Facades\Redirect;
 
 class AuthController extends Controller
 {
     public function showLogin()
     {
+        if(Auth::check()){
+            return redirect()->route('dashboard');
+        }
+        
         return view('Auth.login');
     }
 
     public function login(Request $request)
     {
+        
         $request->validate([
             'email' => 'required|email',
             'password' => 'required|min:5',
         ]);
         $creadentials = $request->only('email', 'password');
         if (Auth::attempt($creadentials)) {
+            // $request->session()->regenerate();
             return redirect()->route('dashboard')->with('success', 'user login successfully!');
         }
             return back()->withErrors([

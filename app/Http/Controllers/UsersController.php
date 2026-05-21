@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\Users\CreateUserRequest;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class UsersController extends Controller
 {
@@ -14,13 +15,16 @@ class UsersController extends Controller
      */
     public function index(Request $request)
     {
-         $builder = User::query();
+        if(!Auth::check()){
+            return redirect()->route('login');
+        }
+        $user = User::query();
         if($request->has('keyword') && $request->input('keyword')) {
-            $builder = $builder->where('name', 'LIKE' , '%'.$request->input('keyword').'%')
+            $user = $user->where('name', 'LIKE' , '%'.$request->input('keyword').'%')
             ->orWhere('email', 'LIKE' , '%'.$request->input('keyword').'%')
             ->orWhere('role', 'LIKE' , '%'.$request->input('keyword').'%');
         }
-        $items = $builder->orderBy('name', 'asc')->paginate(5);   //simplePaginate()
+        $items = $user->orderBy('name', 'asc')->paginate(5)->appends($request->all());   //simplePaginate()
         return view('users.index', ['items' => $items]);
     }
 
@@ -29,6 +33,9 @@ class UsersController extends Controller
      */
     public function create()
     {
+        if(!Auth::check()){
+            return redirect()->route('login');
+        }
         return view('users.create');
     }
 
@@ -51,6 +58,7 @@ class UsersController extends Controller
                 
             }
             DB::commit();
+            // $request->session()->regenerate();
             return redirect()->route('users.index')->with('success','Add new User successfully!' );
         } catch (\Throwable $th) {
             DB::rollback();
@@ -72,7 +80,10 @@ class UsersController extends Controller
      */
     public function edit(string $id)
     {
-         $user = User::find($id);
+        if(!Auth::check()){
+            return redirect()->route('login');
+        }
+        $user = User::find($id);
         return view('users.edit',['item' => $user]);
     }
 
