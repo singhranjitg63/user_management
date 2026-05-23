@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Requests\Users\CreateUserRequest;
 use Illuminate\Support\Facades\DB;
-use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
+use App\Http\Requests\Users\CreateUserRequest;
+use App\Policies\UserPolicy;
 
 class UsersController extends Controller
 {
@@ -24,7 +25,7 @@ class UsersController extends Controller
             ->orWhere('email', 'LIKE' , '%'.$request->input('keyword').'%')
             ->orWhere('role', 'LIKE' , '%'.$request->input('keyword').'%');
         }
-        $items = $user->orderBy('name', 'asc')->paginate(5)->appends($request->all());   //simplePaginate()
+        $items = $user->orderBy('name', 'asc')->paginate(6)->appends($request->all());   //simplePaginate()
         return view('users.index', ['items' => $items]);
     }
 
@@ -36,6 +37,7 @@ class UsersController extends Controller
         if(!Auth::check()){
             return redirect()->route('login');
         }
+        $this->authorize('create',User::class);
         return view('users.create');
     }
 
@@ -83,6 +85,7 @@ class UsersController extends Controller
         if(!Auth::check()){
             return redirect()->route('login');
         }
+         $this->authorize('create',User::class);
         $user = User::find($id);
         return view('users.edit',['item' => $user]);
     }

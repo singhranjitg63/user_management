@@ -15,6 +15,7 @@
     crossorigin="anonymous"></script>
   <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/dashboard/">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.css" />
+ <link rel="stylesheet" href="style.css" />
 
   <style>
     .bd-placeholder-img {

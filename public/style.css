@@ -1,0 +1,20 @@
+/* edit button */
+.btn-warning {
+    height: 25px;
+    padding: 0px 12px;
+}
+
+/* delete button */
+.btn-danger {
+    height: 25px;
+    padding: 0px 8px;
+}
+
+/* pagination  */
+.w-5.h-5 {
+    width: 25px
+}
+
+.flex.gap-2 {
+    display: none;
+}

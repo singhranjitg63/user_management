@@ -2,7 +2,9 @@
     <div class="container">
         <div class="d-flex justify-content-between">
             <h2>Users Table</h2>
-            <button class="btn btn-success m-3"><a class="text-white text-decoration-none" href="{{ route('users.create') }}">Add new User</a></button>
+            @can('create', App\Models\User::class)
+            <a href="{{ route('users.create') }}" class="btn btn-success m-3">Add new User</a>
+            @endcan
         </div>
         <!-- @if(session('success'))
                    <div class="alert alert-success">
@@ -15,24 +17,27 @@
         </form>
         <br>
         <table class="table table-bordered table-hover" border="1">
-             <thead class="table-dark">
+            <thead class="table-dark">
                 <tr>
                     <th>Id.No</th>
                     <th>Name</th>
                     <th>Email</th>
                     <th>Phone</th>
                     <th>Role</th>
+                     @can('create', App\Models\User::class)
                     <th>Actions</th>
+                    @endcan
                 </tr>
             </thead>
             <tbody>
                 @forelse($items as $item)
                 <tr>
-                    <td>{{$loop->iteration + ((request()->input('page', 1)-1) * 5) }}</td>
+                    <td>{{$loop->iteration + ((request()->input('page', 1)-1) * 6) }}</td>
                     <td>{{$item->name}}</td>
                     <td>{{$item->email}}</td>
                     <td>{{$item->phone}}</td>
                     <td>{{$item->role}}</td>
+                    @can('create', App\Models\User::class)
                     <td>
                         <a href="{{route('users.edit', $item->id)}}" class="btn btn-warning">Edit</a>
                         <form action="{{ route('users.destroy', $item->id) }}" method="POST" style="display:inline-block" onsubmit="return confirm('Are You sure')">
@@ -41,6 +46,7 @@
                             <button type="submit" class="btn btn-danger">Delete</button>
                         </form>
                     </td>
+                    @endcan
                 </tr>
                 @empty
                 <tr>
@@ -54,16 +60,6 @@
         </div>
     </div>
     <style>
-        .w-5.h-5 {
-            width: 25px
-        }
-    
-        .flex.gap-2 {
-            display: none;
-        }
-    
-        /* .inline-flex {
-            display:none;
-        } */
+     
     </style>
 </x-layout>
