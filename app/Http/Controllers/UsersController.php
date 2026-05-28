@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Http\Requests\Users\CreateUserRequest;
 use App\Policies\UserPolicy;
+use App\Notifications\WelcomeMail;
+
 
 class UsersController extends Controller
 {
@@ -61,6 +63,7 @@ class UsersController extends Controller
             }
             DB::commit();
             // $request->session()->regenerate();
+            $userData->notify(new WelcomeMail());
             return redirect()->route('users.index')->with('success','Add new User successfully!' );
         } catch (\Throwable $th) {
             DB::rollback();

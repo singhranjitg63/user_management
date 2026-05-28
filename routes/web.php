@@ -1,9 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
+use App\Mail\MyEmail;
 
 Route::get('/', [DashboardController::class , 'index'])->name('dashboard'); 
 
@@ -33,6 +35,14 @@ Route::group(['prefix' => 'users'], function() {
 // });
 
 //logout route
-Route::post('/login', [AuthController::class, 'login']);
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout',[AuthController::class, 'logout'])->name('logout');
+
+Route::get('/mail',function(){
+    return view('mail.name')->with('name','Ranjit Singh');
+})->name('mail');
+Route::get('/mailsend',function(){
+   $name = 'Ranjit Singh';
+   Mail::to('Ranjit@gmail.com')->send(new MyEmail($name));
+});
