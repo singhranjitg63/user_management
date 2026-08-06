@@ -3,128 +3,77 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-use App\Models\User;
 use App\Http\Requests\Users\CreateUserRequest;
-use App\Policies\UserPolicy;
-use App\Notifications\WelcomeMail;
-
+use App\Services\UserService;
 
 class UsersController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    public function __construct(protected UserService $userService)
+    {
+        //
+    }
+
     public function index(Request $request)
     {
-        if(!Auth::check()){
+        if (!Auth::check()) {
             return redirect()->route('login');
         }
-        $user = User::query();
-        if($request->has('keyword') && $request->input('keyword')) {
-            $user = $user->where('name', 'LIKE' , '%'.$request->input('keyword').'%')
-            ->orWhere('email', 'LIKE' , '%'.$request->input('keyword').'%')
-            ->orWhere('role', 'LIKE' , '%'.$request->input('keyword').'%');
-        }
-        $items = $user->orderBy('name', 'asc')->paginate(6)->appends($request->all());   //simplePaginate()
+
+        $items = $this->userService->listUsers($request->input('keyword'))->appends($request->all());
+
         return view('users.index', ['items' => $items]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        if(!Auth::check()){
+        if (!Auth::check()) {
             return redirect()->route('login');
         }
-        $this->authorize('create',User::class);
+        $this->authorize('create', \App\Models\User::class);
+
         return view('users.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(CreateUserRequest $request)
     {
         try {
-            DB::beginTransaction();
-            $userData = new User();
-            $userData->name = $request->name;
-            $userData->email = $request->email;
-            $userData->password = $request->password;
-            $userData->phone = $request->phone;
-            $userData->role = $request->role;
-
-            if (!$userData->save()) {
-                throw new \Exception("User has not been created. please try again later", 422);
-                
-            }
-            DB::commit();
-            // $request->session()->regenerate();
-            $userData->notify(new WelcomeMail());
-            return redirect()->route('users.index')->with('success','Add new User successfully!' );
+            $this->userService->registerUser($request->validated());
+            return redirect()->route('users.index')->with('success', 'Add new User successfully!');
         } catch (\Throwable $th) {
-            DB::rollback();
-            dd($th);
             return redirect()->back()->with('error', $th->getMessage());
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(string $id)
     {
-        if(!Auth::check()){
+        if (!Auth::check()) {
             return redirect()->route('login');
         }
-         $this->authorize('create',User::class);
-        $user = User::find($id);
-        return view('users.edit',['item' => $user]);
+        $this->authorize('create', \App\Models\User::class);
+
+        $user = $this->userService->findUser($id);
+        return view('users.edit', ['item' => $user]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, string $id)
     {
-         try {
-            DB::beginTransaction();
-            $user = User::find($id);
-            $user->name = $request->name;
-            $user->email = $request->email;
-            $user->phone = $request->phone;
-            $user->role = $request->role;
-            
-            if (!$user->save()) {
-                throw new \Exception("User has not been updated. Please try again later", 422);
-            }
-            DB::commit();
-            return redirect()->route('users.index')->with('success','User update successfully!' );
+        try {
+            $this->userService->updateUser($id, $request->all());
+            return redirect()->route('users.index')->with('success', 'User update successfully!');
         } catch (\Throwable $th) {
-            DB::rollback();
             return redirect()->back()->with('error', $th->getMessage());
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
-        $userData = User::findOrFail($id);
-        $userData->delete();
-        return redirect()->route('users.index')->with('success','User delete successfully!' );;
+        $this->userService->deleteUser($id);
+        return redirect()->route('users.index')->with('success', 'User delete successfully!');
     }
-    
 }
